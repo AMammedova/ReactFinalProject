@@ -8,10 +8,6 @@ const Movies = () => {
 
     const data = useSelector(state=>state.data.data);
     const error = useSelector(state=>state.data.error);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getData());
-    },[])
     return (
         <>
             <ul className="movies">

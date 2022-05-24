@@ -1,34 +1,32 @@
-import React, { Component } from 'react';
+import axios from 'axios';
+import React, { Component, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import './ListPage.css';
 
-class ListPage extends Component {
-    state = {
-        movies: [
-            { title: 'The Godfather', year: 1972, imdbID: 'tt0068646' }
-        ]
-    }
-    componentDidMount() {
-        const id = this.props.match.params;
-        console.log(id);
-        // TODO: запрос к сервер на получение списка
-        // TODO: запросы к серверу по всем imdbID
-    }
-    render() { 
-        return (
-            <div className="list-page">
-                <h1 className="list-page__title">Мой список</h1>
+function ListPage() {
+    const [state, setState] = useState([]);
+    const params = useParams();
+
+    useEffect(() => {
+        axios.get(`http://www.omdbapi.com/?i=${params.id}&apikey=fc1fef96`)
+        .then(data=>setState(data.data));
+    },[]);
+    
+    let link = `https://www.imdb.com/title/${params.id}/`;
+    return (
+        <div className="list-page w-100 container">
+            <div className='film-card'>
+                <h1 className="list-page__title fw-light">{state.Title} ({state.Year})</h1>
                 <ul>
-                    {this.state.movies.map((item) => {
-                        return (
-                            <li key={item.imdbID}>
-                                <a href="https://www.imdb.com/title/tt0068646/" target="_blank">{item.title} ({item.year})</a>
-                            </li>
-                        );
-                    })}
+                    <li>
+                        <img className='poster' src={state.Poster} />
+                        <a href={link} className='btn btn-warning p-2 text-light' target="_blank">Go to "{state.Title}"</a>
+                    </li>
                 </ul>
             </div>
-        );
-    }
+        </div>
+    );
+
 }
- 
+
 export default ListPage;
